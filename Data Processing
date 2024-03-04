@@ -27,4 +27,4 @@ SELECT
             )
     END AS "Duration"
 FROM
-    clean3;
+    clean5;
