@@ -1,0 +1,30 @@
+SELECT
+    "TrialID",
+    "Inclusion gender",
+    "Date enrollement",
+    "results date completed"
+FROM "COVID19-web.csv";
+# Binarizing data to run algorithims 
+SELECT
+    "TrialID",
+    "Inclusion gender" AS "Inclusion_gender",
+    "Date enrollement",
+    "results date completed",
+    CASE
+        WHEN LOWER("Inclusion gender") IN ('male', 'female') THEN 1
+        ELSE 0
+    END AS "Inclusion_gender_label",
+    CASE
+        WHEN "results date completed" IS NOT NULL THEN 1
+        ELSE 0
+    END AS "Date completed label",
+    CASE
+        WHEN "results date completed" IS NOT NULL AND TRY_CAST("Date enrollement" AS DATE) IS NOT NULL AND TRY_CAST("results date completed" AS DATE) IS NOT NULL THEN
+            DATEDIFF(
+                'day',
+                CAST(STRPTIME("Date enrollement", '%d/%m/%Y') AS DATE),
+                CAST(STRPTIME("results date completed", '%d/%m/%Y') AS DATE)
+            )
+    END AS "Duration"
+FROM
+    clean3;
